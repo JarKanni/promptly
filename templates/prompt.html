@@ -1,14 +1,17 @@
-<!-- templates/prompts.html -->
-<html>
+<!DOCTYPE html>
+<html lang='en'>
 
 <head>
-	<title>Dialogue Prompt</title>
+	<meta charset='UTF-8'>
+	<title>{{ ptype.title() }} Prompt</title>
+	<style>
+		body {padding: 30px}
+	</style>
 </head>
 
 <body style='padding: 30px'>
-	<!-- Display variables passed from python code -->
-	<h1>Prompt:</h1>
-	<h3>{{ prompt }}</h3>
+	<h3>{{ ptype.title() }} prompt:</h3>
+	<h1>{{ prompt }}</h1>
 </body>
 
 </html>
