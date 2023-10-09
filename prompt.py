@@ -18,19 +18,33 @@ DB_HOST = credentials[0][3]
 DB_PORT = credentials[0][4]
 
 
+# load jinja2 templates
+templates = Jinja2Templates(directory='templates')
+
 
 
 # FastAPI app
 app = FastAPI()
 
+
 # Homepage
 @app.get('/')
-async def root():
-	return {'greeting': 'Welcome to Promptly!'}
+async def root(request: Request):
+	return templates.TemplateResponse(
+			'home.html'
+			, {
+				'request': request
+				, 'greeting': 'Welcome to Promptly!'
+				}
+	)
 
-# A & B prompts
-@app.get('/a_b')
-async def a_b():
+
+# one character prompts
+@app.get('/one')
+async def scenario(request: Request):
+	# type of prompt
+	ptype = 'single character'
+	
 	# connect to db and open cursor
 	conn = psycopg2.connect(database=DB_NAME
 				, user=DB_USER
@@ -41,22 +55,33 @@ async def a_b():
 
 	# grab random prompt
 	cur.execute(
-		'SELECT * FROM a_b ORDER BY RANDOM() LIMIT 1;'
+		'SELECT * FROM one ORDER BY RANDOM() LIMIT 1;'
 		)
 	prompt = cur.fetchone()
 	prompt = prompt[1]
-	print('a_b prompt: ' + prompt)
+	print('one char prompt: ' + prompt)
 
 	# close connections
 	cur.close()
 	conn.close()
 
-	return {prompt}
+	return templates.TemplateResponse(
+			'prompt.html'
+			, {
+				'request': request
+				, 'prompt': prompt
+				, 'ptype':ptype
+				}
+	)
 
 
-# A & B & C prompts
-@app.get('/a_b_c')
-async def a_b_c():
+
+# two character prompts
+@app.get('/two')
+async def two(request: Request):
+	# type of prompt
+	ptype = 'two character' ## change to 'two character??'
+
 	# connect to db and open cursor
 	conn = psycopg2.connect(database=DB_NAME
 				, user=DB_USER
@@ -67,22 +92,68 @@ async def a_b_c():
 
 	# grab random prompt
 	cur.execute(
-		'SELECT * FROM a_b_c ORDER BY RANDOM() LIMIT 1;'
+		'SELECT * FROM two ORDER BY RANDOM() LIMIT 1;'
 		)
 	prompt = cur.fetchone()
 	prompt = prompt[1]
-	print('a_b_c prompt: ' + prompt)
+	print('two char prompt: ' + prompt)
 
 	# close connections
 	cur.close()
 	conn.close()
 
-	return {prompt}
+	return templates.TemplateResponse(
+			'prompt.html'
+			, {
+				'request': request
+				, 'prompt': prompt
+				, 'ptype': ptype
+				}
+	)
+
+
+# three character prompts
+@app.get('/three')
+async def three(request: Request):
+	# type of prompt
+	ptype = 'three character'
+
+	# connect to db and open cursor
+	conn = psycopg2.connect(database=DB_NAME
+				, user=DB_USER
+				, password=DB_PASS
+				, host=DB_HOST
+				, port=DB_PORT)
+	cur = conn.cursor()
+
+	# grab random prompt
+	cur.execute(
+		'SELECT * FROM three ORDER BY RANDOM() LIMIT 1;'
+		)
+	prompt = cur.fetchone()
+	prompt = prompt[1]
+	print('three char prompt: ' + prompt)
+
+	# close connections
+	cur.close()
+	conn.close()
+
+	return templates.TemplateResponse(
+			'prompt.html'
+			, {
+				'request': request
+				, 'prompt': prompt
+				, 'ptype': ptype
+				}
+	)
 
 
 # dialogue prompts
 @app.get('/dialogue')
-async def dialogue():
+async def dialogue(request: Request):
+	# type of prompt
+	ptype = 'dialogue'
+	
 	# connect to database
 	conn = psycopg2.connect(database=DB_NAME
 				, user=DB_USER
@@ -105,12 +176,22 @@ async def dialogue():
 	cur.close()
 	conn.close()
 
-	return {prompt}
+	return templates.TemplateResponse(
+			'prompt.html'
+			, {
+				'request': request
+				, 'prompt': prompt
+				, 'ptype': ptype
+				}
+	)
 
 
 # drawing prompts
 @app.get('/drawing')
-async def drawing():
+async def drawing(request: Request):
+	# type of prompt
+	ptype = 'drawing'
+	
 	# connect to db and open cursor
 	conn = psycopg2.connect(database=DB_NAME
 				, user=DB_USER
@@ -131,12 +212,22 @@ async def drawing():
 	cur.close()
 	conn.close()
 
-	return {prompt}
+	return templates.TemplateResponse(
+			'prompt.html'
+			, {
+				'request': request
+				, 'prompt': prompt
+				, 'ptype': ptype
+				}
+	)
 
 
 # nsfw prompts
 @app.get('/nsfw')
-async def nsfw():
+async def nsfw(request: Request):
+	# type of prompt
+	ptype = 'nsfw'
+	
 	# connect to db and open cursor
 	conn = psycopg2.connect(database=DB_NAME
 				, user=DB_USER
@@ -157,12 +248,22 @@ async def nsfw():
 	cur.close()
 	conn.close()
 
-	return {prompt}
+	return templates.TemplateResponse(
+			'prompt.html'
+			, {
+				'request': request
+				, 'prompt': prompt
+				, 'ptype': ptype
+				}
+	)
 
 
 # prose prompts
 @app.get('/prose')
-async def prose():
+async def prose(request: Request):
+	# type of prompt
+	ptype = 'prose'
+	
 	# connect to db and open cursor
 	conn = psycopg2.connect(database=DB_NAME
 				, user=DB_USER
@@ -183,33 +284,15 @@ async def prose():
 	cur.close()
 	conn.close()
 
-	return {prompt}
+	return templates.TemplateResponse(
+			'prompt.html'
+			, {
+				'request': request
+				, 'prompt': prompt
+				, 'ptype': ptype
+				}
+	)
 
-
-# scenario prompts
-@app.get('/scenario')
-async def scenario():
-	# connect to db and open cursor
-	conn = psycopg2.connect(database=DB_NAME
-				, user=DB_USER
-				, password=DB_PASS
-				, host=DB_HOST
-				, port=DB_PORT)
-	cur = conn.cursor()
-
-	# grab random prompt
-	cur.execute(
-		'SELECT * FROM scenario ORDER BY RANDOM() LIMIT 1;'
-		)
-	prompt = cur.fetchone()
-	prompt = prompt[1]
-	print('scenario prompt: ' + prompt)
-
-	# close connections
-	cur.close()
-	conn.close()
-
-	return {prompt}
 
 
 
