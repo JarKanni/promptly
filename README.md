@@ -1,22 +1,50 @@
 # Promptly
-##### Flesh out your characters!
+Flesh out your characters!
 
 # Explanation
-Prompt generators to spur inspiration and further develop characters
+Prompt generators to spur inspiration for writing, drawing, or character musing.
 
-Generator Types:
-- single character
-- two characters
-- three characters
-- dialogue
-- drawing
-- prose
+## Generator Types:
+**Single character**:   Character has learned to like something they previously didn't
+
+
+**Two characters**:   A is visiting B at work/class
+
+
+**Three characters**:   A and B are nursing C back to health
+
+
+**Dialogue**:   "Care to join me?"
+
+
+**Drawing**:   Character has their back to the viewer
+
+
+**Prose**:   There was nothing left
 
 
 
 # Files
-##### prompt.py
-  - FastAPI python file using psycopg2 to query the postgresql database for each request
+```
+promptly/
+├─ prompt.py
+├─ templates/
+│  ├─ home.html
+│  ├─ prompt.html
+│  ├─ submit.html
+│  ├─ nav.html
+```
+
+#### [prompt.py](https://github.com/JarKanni/promptly/blob/main/prompt.py)
+- Python file using FastAPI, psycopg2 (db queries to postgresql), jinja2 (templates)
+#### [home.html](https://github.com/JarKanni/promptly/blob/main/templates/home.html)
+- template home page
+#### [prompt.html](https://github.com/JarKanni/promptly/blob/main/templates/prompt.html)
+- template page for giving prompts
+#### [submit.html](https://github.com/JarKanni/promptly/blob/main/templates/submit.html)
+- WIP will allow submitting new prompts into database
+#### [nav.html](https://github.com/JarKanni/promptly/blob/main/templates/nav.html)
+- WIP template for navigation bar
 
 
 # Tools
@@ -24,8 +52,6 @@ Generator Types:
 - Postgresql
 - psycopg2
 - jinja2
-- pandas
-- numpy
 
 
 # References
