@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+	<meta charset='UTF-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1' user-scalable='yes'>
+	<title>Submit New Prompt</title>
+	<style>
+		body {padding: 0px 30px}
+		h1 {margin-bottom: 0px;}		
+		h2 {margin-top: 0px;
+			font-size: 20px;
+			opacity: 60%;}
+	</style>
+	<script>
+		function thankyou() {
+			alert('Thank you! Now there\'s even more fun ones to receive!');
+		}
+	</script>
+</head>
+
+<body>
+	<h1>Promptly
+		<h2>Flesh out your characters!</h2>
+	</h1>
+	<hr />
+	<a href='/'>Home</a> | <a href='/one'>Single</a> | <a href='/two'>Two</a> | <a href='/three'>Three</a> |  <a href='/dialogue'>Dialogue</a> |  <a href='/drawing'>Drawing</a> |  <a href='/prose'>Prose</a>
+	<hr />
+	<h3>Submit new prompt</h3>
+	<form method='post' action='/submit' onsubmit=''>
+		<label for='ptype'>Type of prompt:</label>
+			<select name='ptype' id='ptype'>
+				<option value='dialogue'>Dialogue</option>
+				<option value='drawing'>Drawing</option>
+				<option value='nsfw'>NSFW</option>
+				<option value='prose'>Prose</option>
+				<option value='one'>One character</option>
+				<option value='two'>Two characters</option>
+				<option value='three'>Three characters</option>
+			</select>
+		<br />
+		<br />
+		<label for='new_prompt'>Prompt:</label>
+		<br />
+		<input type='text' id='new_prompt' name='new_prompt' size='40em'>
+		<br />
+		<br />
+		<label for='new_tags'>Tags:</label>
+		<br />
+		<input type='text' id='new_tags' name='new_tags'>
+		<br />
+		<br />
+		<input class='submit' type='submit' value='Submit' onclick='thankyou();'>
+	</form>
+</body>
+
+</html>

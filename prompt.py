@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-import psycopg2
+import psycopg
 import pandas as pd
 import numpy as np
 
@@ -18,13 +18,16 @@ DB_HOST = credentials[0][3]
 DB_PORT = credentials[0][4]
 
 
+
+# FastAPI app
+app = FastAPI()
+#app.mount('./templates/static', StaticFiles(directory='static'), name='static')
+
 # load jinja2 templates
 templates = Jinja2Templates(directory='templates')
 
 
 
-# FastAPI app
-app = FastAPI()
 
 
 # Homepage
@@ -46,7 +49,7 @@ async def scenario(request: Request):
 	ptype = 'single character'
 	
 	# connect to db and open cursor
-	conn = psycopg2.connect(database=DB_NAME
+	conn = psycopg.connect(dbname=DB_NAME
 				, user=DB_USER
 				, password=DB_PASS
 				, host=DB_HOST
@@ -83,7 +86,7 @@ async def two(request: Request):
 	ptype = 'two character' ## change to 'two character??'
 
 	# connect to db and open cursor
-	conn = psycopg2.connect(database=DB_NAME
+	conn = psycopg.connect(dbname=DB_NAME
 				, user=DB_USER
 				, password=DB_PASS
 				, host=DB_HOST
@@ -119,7 +122,7 @@ async def three(request: Request):
 	ptype = 'three character'
 
 	# connect to db and open cursor
-	conn = psycopg2.connect(database=DB_NAME
+	conn = psycopg.connect(dbname=DB_NAME
 				, user=DB_USER
 				, password=DB_PASS
 				, host=DB_HOST
@@ -155,7 +158,7 @@ async def dialogue(request: Request):
 	ptype = 'dialogue'
 	
 	# connect to database
-	conn = psycopg2.connect(database=DB_NAME
+	conn = psycopg.connect(dbname=DB_NAME
 				, user=DB_USER
 				, password=DB_PASS
 				, host=DB_HOST
@@ -193,7 +196,7 @@ async def drawing(request: Request):
 	ptype = 'drawing'
 	
 	# connect to db and open cursor
-	conn = psycopg2.connect(database=DB_NAME
+	conn = psycopg.connect(dbname=DB_NAME
 				, user=DB_USER
 				, password=DB_PASS
 				, host=DB_HOST
@@ -229,7 +232,7 @@ async def nsfw(request: Request):
 	ptype = 'nsfw'
 	
 	# connect to db and open cursor
-	conn = psycopg2.connect(database=DB_NAME
+	conn = psycopg.connect(dbname=DB_NAME
 				, user=DB_USER
 				, password=DB_PASS
 				, host=DB_HOST
@@ -265,7 +268,7 @@ async def prose(request: Request):
 	ptype = 'prose'
 	
 	# connect to db and open cursor
-	conn = psycopg2.connect(database=DB_NAME
+	conn = psycopg.connect(dbname=DB_NAME
 				, user=DB_USER
 				, password=DB_PASS
 				, host=DB_HOST
@@ -295,6 +298,47 @@ async def prose(request: Request):
 
 
 
+
+# submit new prompt
+@app.get('/new_prompt', response_class=HTMLResponse)
+async def new_prompt(request: Request):
+	return templates.TemplateResponse(
+			'submit.html'
+			, {
+				'request': request
+				}
+	)
+
+
+
+
+
+# INSERTS new prompt into database
+@app.post('/submit')
+async def new_prompt(new_prompt: str = Form(...), new_tags: str = Form(...), ptype: str = Form(...)):
+	new_prompt = ''.join(["'",new_prompt,"'"])
+	new_tags = ''.join(["'",new_tags,"'"])
+
+
+	# connect to db and open cursor
+	conn = psycopg.connect(dbname=DB_NAME
+				, user=DB_USER
+				, password=DB_PASS
+				, host=DB_HOST
+				, port=DB_PORT)
+	cur = conn.cursor()
+
+	# insert new prompt to database
+	cur.execute(
+		f'INSERT INTO {ptype}(prompt, tags) VALUES ({new_prompt}, {new_tags});'
+		)
+	print('Added' + ptype + ' prompt:\n' + new_prompt + '\nTags: ' + new_tags)
+
+	# close connections
+	cur.close()
+	conn.close()
+
+	return f'{ptype} prompt added to database:\n{new_prompt}\nTags: {tags}'
 
 if __name__ == '__main__':
 	run(app='dialgue:app', reload=True, host='192.168.1.18', port=8000)

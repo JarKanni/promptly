@@ -3,15 +3,34 @@
 
 <head>
 	<meta charset='UTF-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1' user-scalable='yes'>
 	<title>{{ ptype.title() }} Prompt</title>
 	<style>
-		body {padding: 30px}
+		body {padding: 0px 30px}
+		h1 {margin-bottom: 0px;}		
+		h2 {margin-top: 0px;
+			font-size: 20px;
+			opacity: 60%;}
 	</style>
 </head>
 
-<body style='padding: 30px'>
-	<h3>{{ ptype.title() }} prompt:</h3>
+<body>
+	<h1>Promptly
+		<h2>Flesh out your characters!</h2>
+	</h1>
+	<hr />
+	<a href='/'>Home</a> | <a href='/one'>Single</a> | <a href='/two'>Two</a> | <a href='/three'>Three</a> |  <a href='/dialogue'>Dialogue</a> |  <a href='/drawing'>Drawing</a> |  <a href='/prose'>Prose</a>
+	<hr />
+	<br />
+	<h2>{{ ptype.title() }} prompt:</h2>
+	{% if ptype == 'dialogue' %}
+	<h1>"{{ prompt }}"</h1>
+	{% else %}
 	<h1>{{ prompt }}</h1>
+	{% endif %}
+	<br />
+	<br />
+	<button name='reroll' autofocus='true' onClick='window.location.reload();'>Reroll!</button>
 </body>
 
 </html>
